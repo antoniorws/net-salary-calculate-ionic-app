@@ -11,8 +11,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 export class HomePage {
 
   constructor(public navCtrl : NavController, public admobFree: AdMobFree, private statusBar : StatusBar) {
-    /*this.showInterstitialAd();
-    this.showBannerAd();*/
+    this.showInterstitialAd();
+    this.showBannerAd();
     this.statusBar.overlaysWebView(true);
     this.statusBar.backgroundColorByHexString('#ffffff');
   }
