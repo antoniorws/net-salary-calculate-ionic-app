@@ -1,5 +1,7 @@
 {
   "name": "salarioLiquido",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
