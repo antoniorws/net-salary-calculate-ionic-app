@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AdMobFree, AdMobFreeBannerConfig, AdMobFreeInterstitialConfig} from '@ionic-native/admob-free/ngx';
-import { NavController } from '@ionic/angular';
+import { NavController, IonCardContent } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 @Component({
@@ -10,13 +10,6 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 })
 export class HomePage {
 
-  constructor(public navCtrl : NavController, public admobFree: AdMobFree, private statusBar : StatusBar) {
-    this.showInterstitialAd();
-    this.showBannerAd();
-    this.statusBar.overlaysWebView(true);
-    this.statusBar.backgroundColorByHexString('#ffffff');
-  }
-  
   salarioLiquido = null;
   inss = null;
   percInss = "";
@@ -24,6 +17,72 @@ export class HomePage {
   percIr = "";
   salarioAnual = null;
   totalDesconto = null;
+  valorCalculadora = null
+  valorClick = null;
+  salarioBruto= null;
+  outrosDescontos = null;
+  planoSaude = null;
+  pensaoAlimenticia = null;
+
+  constructor(public navCtrl : NavController, public admobFree: AdMobFree, private statusBar : StatusBar) {
+    this.showInterstitialAd();
+    this.showBannerAd();
+    this.statusBar.overlaysWebView(true);
+    this.statusBar.backgroundColorByHexString('#ffffff');
+  }
+
+  btnLimpar(){
+    document.getElementById('salarioBrutoValor').innerHTML = "";
+  }
+
+  btnConcluido(){
+    this.valorCalculadora = document.querySelector("#salarioBrutoValor");
+    if(this.valorCalculadora.innerText != ""){
+      if(this.valorClick == "salarioBruto"){
+        {document.getElementById('salarioBruto').innerHTML =  this.valorCalculadora.innerText;}
+      }else if(this.valorClick == "pensaoAlimenticia"){
+        {document.getElementById('pensaoAlimenticia').innerHTML =  this.valorCalculadora.innerText;}
+      }else if(this.valorClick == "planoSaude"){
+        {document.getElementById('planoSaude').innerHTML =  this.valorCalculadora.innerText;}
+      }else if(this.valorClick == "outrosDescontos"){
+        {document.getElementById('outrosDescontos').innerHTML =  this.valorCalculadora.innerText;}
+      }
+      this.esconderCalculadora();
+    }
+  }
+
+  apagar(){
+    this.valorCalculadora = document.querySelector("#salarioBrutoValor");
+    if(this.valorCalculadora.innerText != ""){
+      this.valorCalculadora.innerText = this.valorCalculadora.innerText.substring(0, this.valorCalculadora.innerText.length - 1);
+      document.getElementById('salarioBrutoValor').innerHTML = this.valorCalculadora.innerText;
+    }
+  }
+  
+  mostrarBtn(valorBtn:string){
+    this.valorCalculadora = document.querySelector("#salarioBrutoValor");
+    if(this.valorCalculadora.innerText != ""){
+      document.getElementById('salarioBrutoValor').innerHTML = this.valorCalculadora.innerText +valorBtn;
+    }else{
+      document.getElementById('salarioBrutoValor').innerHTML = valorBtn;
+    }
+  }
+
+  mostrarCalculadora(valor:String){
+    document.getElementById('salarioBrutoValor').innerHTML = "";
+    document.getElementById('cardCalculadora').style.position = "relative";
+    document.getElementById('cardCalculadora').style.visibility = "visible";
+    document.getElementById('cardValores').style.position = "absolute";
+    document.getElementById('cardValores').style.visibility = "hidden";
+    this.valorClick = valor;
+  }
+
+  esconderCalculadora(){
+    document.getElementById('cardCalculadora').style.position = "absolute";
+    document.getElementById('cardCalculadora').style.visibility = "hidden";
+    document.getElementById('cardValores').style.position = "relative";
+    document.getElementById('cardValores').style.visibility = "visible";
+  }
 
   validaInss(salarioBruto:number){
     if(salarioBruto == 1751.81 || salarioBruto < 1751.82){
@@ -61,24 +120,32 @@ export class HomePage {
     }
   }
 
-  calcular(salarioBruto:number, outrosDescontos:number, valor:string, planoSaude:number, pensaoAlimenticia:number, 
-    descontoTransporte:number){
-    
+  calcular(valor:string, descontoTransporte:number){
+    this.salarioBruto = document.querySelector("#salarioBruto");
+    this.salarioBruto = Number(this.salarioBruto.innerText);
+    this.outrosDescontos = document.querySelector("#outrosDescontos");
+    this.outrosDescontos = Number(this.outrosDescontos.innerText);
+    this.planoSaude = document.querySelector("#planoSaude");
+    this.planoSaude = Number(this.planoSaude.innerText);
+    this.pensaoAlimenticia = document.querySelector("#pensaoAlimenticia");
+    this.pensaoAlimenticia = Number(this.pensaoAlimenticia.innerText);
+  
     descontoTransporte = null;
+    
     if(valor == "6"){
-      descontoTransporte = salarioBruto * 0.06;
+      descontoTransporte = this.salarioBruto * 0.06;
     }
-    this.validaInss(salarioBruto);
-    this.validaIR(salarioBruto);
-    this.salarioLiquido = salarioBruto - (this.inss + this.ir);
+    this.validaInss(this.salarioBruto);
+    this.validaIR(this.salarioBruto);
+    this.salarioLiquido = this.salarioBruto - (this.inss + this.ir);
     this.ir = this.ir.toFixed(2);
     this.inss = this.inss.toFixed(2);
-    this.salarioLiquido = this.salarioLiquido - (outrosDescontos != null ? outrosDescontos : 0);
+    this.salarioLiquido = this.salarioLiquido - (this.outrosDescontos != null ? this.outrosDescontos : 0);
     this.salarioLiquido = this.salarioLiquido - (descontoTransporte != null ? descontoTransporte : 0);
-    this.salarioLiquido = this.salarioLiquido - (planoSaude != null ? planoSaude : 0);
-    this.salarioLiquido = this.salarioLiquido - (pensaoAlimenticia != null ? pensaoAlimenticia : 0);
+    this.salarioLiquido = this.salarioLiquido - (this.planoSaude != null ? this.planoSaude : 0);
+    this.salarioLiquido = this.salarioLiquido - (this.pensaoAlimenticia != null ? this.pensaoAlimenticia : 0);
     this.salarioLiquido = this.salarioLiquido.toFixed(2);
-    this.totalDesconto = salarioBruto - this.salarioLiquido;
+    this.totalDesconto = this.salarioBruto - this.salarioLiquido;
     this.totalDesconto = this.totalDesconto.toFixed(2);
     {document.getElementById('salarioLiquido').innerHTML =  "R$ "+this.salarioLiquido;}
     {document.getElementById('inss').innerHTML =  "R$ "+this.inss;}
@@ -94,13 +161,7 @@ export class HomePage {
   }
 
   limpar(){
-    {document.getElementById('salarioLiquido').innerHTML =  "";}
-    {document.getElementById('inss').innerHTML =  "";}
-    {document.getElementById('percInss').innerHTML =  "";}
-    {document.getElementById('impostoDeRenda').innerHTML =  "";}
-    {document.getElementById('percIr').innerHTML =  "";}
-    {document.getElementById('totalDesconto').innerHTML =  "";}
-    
+    window.location.reload();
   }
 
   showBannerAd() {
