@@ -1,3 +1,64 @@
+.cardCalculadora{
+    position: absolute;
+    visibility: collapse;
+}
+.cardValores{
+    ion-input{
+        font-size: 18px;
+    }
+    ion-list-header{
+        font-size: 18px;
+        font-family: sans-serif, Impact;
+    }
+}
+
+#salarioBrutoValor{
+    text-align: center;
+}
+
+#salarioBruto{
+    color: #095528;
+}
+
+#pensaoAlimenticia, #planoSaude, #outrosDescontos{
+    color: #6b240e;
+}
+
 #toolbar{
     padding-top: 10px;
+}
+
+.tamanhoBtn{
+    width: 93px;
+    height: 50px;
+    font-size: 25px;
+}
+
+.btnConcluido{
+    position: absolute;
+    top: 80%;
+    height: 20px;
+    width: 93px;
+}
+
+.btnVoltar{
+    position: absolute;
+    top: 89%;
+    height: 20px;
+    width: 93px;
+}
+
+#salarioBrutoValor{
+    font-size: 20px;
+}
+
+#btnApagar{
+    height: 30px;
+    width: 60px;
+    padding-right: 10px;
+}
+
+#iconApagar{
+    height: 25px;
+    width: 30px;
 }

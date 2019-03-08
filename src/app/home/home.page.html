@@ -7,76 +7,108 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-item>
-    <ion-label>R$</ion-label>
-    <ion-input id="salarioBruto" [(ngModel)]="salarioBruto" type="number" placeHolder="Digite o Salário Bruto"></ion-input>
-  </ion-item>
   
-  <ion-item>
+  <ion-card color="medium" class="cardCalculadora" id="cardCalculadora">
+    <ion-item>
       <ion-label>R$</ion-label>
-      <ion-input id="pensaoAlimenticia"  [(ngModel)]="pensaoAlimenticia" type="number" placeHolder="Pensão Alimentícia"></ion-input>
-  </ion-item>
-
-  <ion-item>
-      <ion-label>R$</ion-label>
-      <ion-input id="planoSaude"  [(ngModel)]="planoSaude" type="number" placeHolder="Plano de Saúde"></ion-input>
-  </ion-item>
-
-  <ion-item>
-      <ion-label>R$</ion-label>
-      <ion-input id="outrosDescontos"  [(ngModel)]="outrosDescontos" type="number" placeHolder="Outros Descontos"></ion-input>
-  </ion-item>
-
-  <ion-list>
-    <ion-list-header>
-        Desconto Vale Transporte
-    </ion-list-header>
-    <ion-radio-group [(ngModel)]="valor">
-      <ion-item>
-        <ion-label>Sem Desconto</ion-label>
-        <ion-radio color="success" value="semDesconto"></ion-radio>
-      </ion-item>
-      <ion-item>
-        <ion-label>6%</ion-label>
-        <ion-radio color="success" value="6"></ion-radio>
-      </ion-item>
-    </ion-radio-group>
-  </ion-list>
-
-  <ion-button color="success" (click)="calcular(salarioBruto, outrosDescontos, valor, planoSaude, pensaoAlimenticia)" expand="full">Calcular</ion-button>
+      <ion-input id="salarioBrutoValor" placeholder="0.00" type="text"></ion-input>
+      <ion-button color="danger" id="btnApagar" (click)="apagar()">
+        <ion-icon id="iconApagar" name="backspace"></ion-icon>
+      </ion-button>
+      <ion-button color="danger" id="btnLimpar" (click)="btnLimpar()">
+        Limpar
+      </ion-button>
+    </ion-item>
+    <ion-button class="tamanhoBtn" id="btnSete" (click)="mostrarBtn('7')" color="light">7</ion-button>
+    <ion-button class="tamanhoBtn" (click)="mostrarBtn('8')" color="light">8</ion-button>
+    <ion-button class="tamanhoBtn" (click)="mostrarBtn('9')" color="light">9</ion-button>
+    <ion-button class="tamanhoBtn" (click)="mostrarBtn('4')" color="light">4</ion-button>
+    <ion-button class="tamanhoBtn" (click)="mostrarBtn('5')" color="light">5</ion-button>
+    <ion-button class="tamanhoBtn" (click)="mostrarBtn('6')" color="light">6</ion-button>
+    <ion-button class="tamanhoBtn" (click)="mostrarBtn('1')" color="light">1</ion-button>
+    <ion-button class="tamanhoBtn" (click)="mostrarBtn('2')" color="light">2</ion-button>
+    <ion-button class="tamanhoBtn" (click)="mostrarBtn('3')" color="light">3</ion-button>
+    <ion-button class="tamanhoBtn" (click)="mostrarBtn('.')" color="light">.</ion-button>
+    <ion-button class="tamanhoBtn" (click)="mostrarBtn('0')" color="light">0</ion-button>
+    <ion-button class="btnConcluido" (click)="btnConcluido()" color="success">Concluído</ion-button>
+    <ion-button class="btnVoltar" (click)="esconderCalculadora()" color="danger">Voltar</ion-button>
+  </ion-card>
   
-  <ion-item color="medium">
-    <ion-label stacked>Salário Líquido</ion-label>
-  </ion-item>
-  <ion-item>
-    <i>
-      <ion-label id="salarioLiquido"></ion-label>
-    </i>
-  </ion-item>
+  <ion-card class="cardValores" id="cardValores">
+    <ion-item (click)="mostrarCalculadora('salarioBruto')">
+      <ion-label>R$ </ion-label>
+      <ion-input id="salarioBruto" [(ngModel)]="salarioBruto" type="text" placeHolder="Digite o Salário Bruto" readonly></ion-input>
+    </ion-item>
+    
+    <ion-item color="medium" (click)="mostrarCalculadora('pensaoAlimenticia')">
+        <ion-label>R$ </ion-label>
+        <ion-input id="pensaoAlimenticia" [(ngModel)]="pensaoAlimenticia" type="text" placeHolder="Pensão Alimentícia" readonly></ion-input>
+    </ion-item>
 
-  <ion-item color="medium" >
-    <ion-label stacked>INSS</ion-label>
-    <ion-label id="percInss"></ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-label id="inss"></ion-label>
-  </ion-item>
+    <ion-item (click)="mostrarCalculadora('planoSaude')">
+        <ion-label>R$ </ion-label>
+        <ion-input id="planoSaude" [(ngModel)]="planoSaude" type="text" placeHolder="Plano de Saúde" readonly></ion-input>
+    </ion-item>
 
-  <ion-item color="medium">
-    <ion-label stacked>Imposto de Renda</ion-label>
-    <ion-label id="percIr"></ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-label id="impostoDeRenda"></ion-label>
-  </ion-item>
+    <ion-item color="medium" (click)="mostrarCalculadora('outrosDescontos')">
+        <ion-label>R$ </ion-label>
+        <ion-input id="outrosDescontos" [(ngModel)]="outrosDescontos" type="text" placeHolder="Outros Descontos" readonly></ion-input>
+    </ion-item>
+    
+    <ion-list>
+      <ion-list-header>
+          Desconto Vale Transporte
+      </ion-list-header>
+      <ion-radio-group [(ngModel)]="valor">
+        <ion-item color="medium">
+          <ion-label>Sem Desconto</ion-label>
+          <ion-radio color="success" value="semDesconto"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>6%</ion-label>
+          <ion-radio color="danger" value="6"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
 
-  <ion-item color="medium">
-    <ion-label stacked>Total de Descontos</ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-label id="totalDesconto"></ion-label>
-  </ion-item>
+  </ion-card>
 
+  <ion-button color="success" (click)="calcular(valor)" expand="full">Calcular</ion-button>
+ 
+  <ion-card class="cardResultados" id="cardResultados">
+  
+    <ion-item color="medium">
+      <ion-label stacked>Salário Líquido</ion-label>
+    </ion-item>
+    <ion-item>
+      <i>
+        <ion-label color="success" id="salarioLiquido"></ion-label>
+      </i>
+    </ion-item>
+
+    <ion-item color="medium" >
+      <ion-label stacked>INSS</ion-label>
+      <ion-label id="percInss"></ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label color="danger" id="inss"></ion-label>
+    </ion-item>
+
+    <ion-item color="medium">
+      <ion-label stacked>Imposto de Renda</ion-label>
+      <ion-label id="percIr"></ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label color="danger" id="impostoDeRenda"></ion-label>
+    </ion-item>
+
+    <ion-item color="medium">
+      <ion-label stacked>Total de Descontos</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label color="danger" id="totalDesconto"></ion-label>
+    </ion-item>
+  </ion-card>
   <ion-button color="success" (click)="limpar()" expand="full">Limpar</ion-button>
 
 </ion-content>
