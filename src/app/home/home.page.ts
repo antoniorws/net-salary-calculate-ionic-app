@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { AdMobFree, AdMobFreeBannerConfig, AdMobFreeInterstitialConfig} from '@ionic-native/admob-free/ngx';
-import { NavController, IonCardContent } from '@ionic/angular';
+import { NavController, PopoverController, NavParams} from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { CalculadoraPage } from '../calculadora/calculadora.page';
 
 @Component({
   selector: 'app-home',
@@ -17,71 +18,112 @@ export class HomePage {
   percIr = "";
   salarioAnual = null;
   totalDesconto = null;
-  valorCalculadora = null
-  valorClick = null;
   salarioBruto= null;
-  outrosDescontos = null;
-  planoSaude = null;
-  pensaoAlimenticia = null;
+  salarioBrutoVar = null;
+  outrosDescontos = "";
+  outrosDescontosVar = null;
+  planoSaude = "";
+  planoSaudeVar = null;
+  pensaoAlimenticia = "";
+  pensaoAlimenticiaVar = null;
+  valorCalculadora = null;
+  impostoDeRenda = null;
 
-  constructor(public navCtrl : NavController, public admobFree: AdMobFree, private statusBar : StatusBar) {
-    this.showInterstitialAd();
-    this.showBannerAd();
+  constructor(public navCtrl : NavController, public admobFree: AdMobFree, private statusBar : StatusBar,
+            private popover: PopoverController) {
+    //this.showInterstitialAd();
+    //this.showBannerAd();
     this.statusBar.overlaysWebView(true);
     this.statusBar.backgroundColorByHexString('#ffffff');
   }
 
-  btnLimpar(){
-    document.getElementById('salarioBrutoValor').innerHTML = "";
-  }
-
-  btnConcluido(){
-    this.valorCalculadora = document.querySelector("#salarioBrutoValor");
-    if(this.valorCalculadora.innerText != ""){
-      if(this.valorClick == "salarioBruto"){
-        {document.getElementById('salarioBruto').innerHTML =  this.valorCalculadora.innerText;}
-      }else if(this.valorClick == "pensaoAlimenticia"){
-        {document.getElementById('pensaoAlimenticia').innerHTML =  this.valorCalculadora.innerText;}
-      }else if(this.valorClick == "planoSaude"){
-        {document.getElementById('planoSaude').innerHTML =  this.valorCalculadora.innerText;}
-      }else if(this.valorClick == "outrosDescontos"){
-        {document.getElementById('outrosDescontos').innerHTML =  this.valorCalculadora.innerText;}
+  async mostrarCalculadora(valor:string, salarioLiquido:string, 
+        inss:string, percInss:string, totalDesconto:string, ir:string, percIr:string, ){
+    const popover = await this.popover.create({
+      component : CalculadoraPage,
+      componentProps:{
+        tipoInput: valor,
+        salarioLiquido : salarioLiquido,
+        inss : inss,
+        percInss : percInss,
+        totalDesconto : totalDesconto,
+        ir : ir,
+        percIr : percIr
       }
-      this.esconderCalculadora();
-    }
-  }
+    });
+    popover.present();
 
-  apagar(){
-    this.valorCalculadora = document.querySelector("#salarioBrutoValor");
-    if(this.valorCalculadora.innerText != ""){
-      this.valorCalculadora.innerText = this.valorCalculadora.innerText.substring(0, this.valorCalculadora.innerText.length - 1);
-      document.getElementById('salarioBrutoValor').innerHTML = this.valorCalculadora.innerText;
-    }
+    popover.onDidDismiss()
+    .then((result) => {
+      this.valorCalculadora = result['data'];
+      if(this.valorCalculadora != "close" && this.valorCalculadora != "" && result['role'] == "completed"){
+        this.maskReal(this.valorCalculadora);
+        this.valorCalculadora = "R$ "+this.valorCalculadora;
+        if(valor == "salarioBruto"){
+          this.salarioBruto = this.valorCalculadora;
+        }else if(valor == "pensaoAlimenticia"){
+          this.pensaoAlimenticia = this.valorCalculadora;
+        }else if(valor == "planoSaude"){
+          this.planoSaude = this.valorCalculadora;
+        }else if(valor == "outrosDescontos"){
+          this.outrosDescontos = this.valorCalculadora;
+        }
+      }
+    });
   }
   
-  mostrarBtn(valorBtn:string){
-    this.valorCalculadora = document.querySelector("#salarioBrutoValor");
-    if(this.valorCalculadora.innerText != ""){
-      document.getElementById('salarioBrutoValor').innerHTML = this.valorCalculadora.innerText +valorBtn;
-    }else{
-      document.getElementById('salarioBrutoValor').innerHTML = valorBtn;
+  maskReal(value:string){
+    if(value != "" || value != null){
+      if("." == value.substring(value.length-3, value.length-2)){
+        value = value.substring(0, value.length-3) + ","+value.substring(value.length-2);
+      }else if("." == value.substring(value.length-2, value.length-1)){
+        value = value.substring(0, value.length-2) + ","+value.substring(value.length-1) + "0";
+      }else if("." == value.substring(value.length-1, value.length)){
+        value = value.substring(0, value.length-1) + ","+value.substring(value.length) + "00";
+      }else{
+        value = value + ",00"
+      }
+      if(value.length-3 >= 4){
+        value = value.substring(0, value.length - 6) + "." + value.substring(value.length - 6);
+        if(value.length-3 >= 8){
+          value = value.substring(0, value.length - 10) + "." + value.substring(value.length - 10);
+          if(value.length-3 >= 12){
+            value = value.substring(0, value.length - 14  ) + "." + value.substring(value.length - 14);
+          }
+        }
+      }
+      this.valorCalculadora = value;
     }
   }
 
-  mostrarCalculadora(valor:String){
-    document.getElementById('salarioBrutoValor').innerHTML = "";
-    document.getElementById('cardCalculadora').style.position = "relative";
-    document.getElementById('cardCalculadora').style.visibility = "visible";
-    document.getElementById('cardValores').style.position = "absolute";
-    document.getElementById('cardValores').style.visibility = "hidden";
-    this.valorClick = valor;
+  tirarMaskReal(value:string):string{
+    value = value.substring(0, value.length-3) + "." + value.substring(value.length-2);
+    if(value.length-3 >= 5){
+      value = value.substring(0, value.length - 7) + value.substring(value.length - 6);
+      if(value.length-3 >= 8){
+        value = value.substring(0, value.length - 10) + value.substring(value.length - 9);
+        if(value.length-3 >= 11){
+          value = value.substring(0, value.length - 13) + value.substring(value.length - 12);
+        }
+      }
+    }
+    return value;
   }
 
-  esconderCalculadora(){
-    document.getElementById('cardCalculadora').style.position = "absolute";
-    document.getElementById('cardCalculadora').style.visibility = "hidden";
-    document.getElementById('cardValores').style.position = "relative";
-    document.getElementById('cardValores').style.visibility = "visible";
+  tirarR$(value:string, input:string){
+    if(input == "salarioBruto"){
+      this.salarioBrutoVar = value.substring(3);
+      this.salarioBrutoVar = this.tirarMaskReal(this.salarioBrutoVar);
+    }else if(input == "pensaoAlimenticia"){
+      this.pensaoAlimenticiaVar = value.substring(3);
+      this.pensaoAlimenticiaVar = this.pensaoAlimenticiaVar != null || this.pensaoAlimenticiaVar != "" ? this.tirarMaskReal(this.pensaoAlimenticiaVar):"";
+    }else if(input == "planoSaude"){
+      this.planoSaudeVar = value.substring(3);
+      this.planoSaudeVar = this.planoSaudeVar != null || this.planoSaudeVar != "" ?  this.tirarMaskReal(this.planoSaudeVar):"";
+    }else if(input == "outrosDescontos"){
+      this.outrosDescontosVar = value.substring(3);
+      this.outrosDescontosVar = this.outrosDescontosVar != null || this.outrosDescontosVar != "" ? this.tirarMaskReal(this.outrosDescontosVar):"";
+    }
   }
 
   validaInss(salarioBruto:number){
@@ -121,47 +163,38 @@ export class HomePage {
   }
 
   calcular(valor:string, descontoTransporte:number){
-    this.salarioBruto = document.querySelector("#salarioBruto");
-    this.salarioBruto = Number(this.salarioBruto.innerText);
-    this.outrosDescontos = document.querySelector("#outrosDescontos");
-    this.outrosDescontos = Number(this.outrosDescontos.innerText);
-    this.planoSaude = document.querySelector("#planoSaude");
-    this.planoSaude = Number(this.planoSaude.innerText);
-    this.pensaoAlimenticia = document.querySelector("#pensaoAlimenticia");
-    this.pensaoAlimenticia = Number(this.pensaoAlimenticia.innerText);
-  
-    descontoTransporte = null;
-    
-    if(valor == "6"){
-      descontoTransporte = this.salarioBruto * 0.06;
-    }
-    this.validaInss(this.salarioBruto);
-    this.validaIR(this.salarioBruto);
-    this.salarioLiquido = this.salarioBruto - (this.inss + this.ir);
-    this.ir = this.ir.toFixed(2);
-    this.inss = this.inss.toFixed(2);
-    this.salarioLiquido = this.salarioLiquido - (this.outrosDescontos != null ? this.outrosDescontos : 0);
-    this.salarioLiquido = this.salarioLiquido - (descontoTransporte != null ? descontoTransporte : 0);
-    this.salarioLiquido = this.salarioLiquido - (this.planoSaude != null ? this.planoSaude : 0);
-    this.salarioLiquido = this.salarioLiquido - (this.pensaoAlimenticia != null ? this.pensaoAlimenticia : 0);
-    this.salarioLiquido = this.salarioLiquido.toFixed(2);
-    this.totalDesconto = this.salarioBruto - this.salarioLiquido;
-    this.totalDesconto = this.totalDesconto.toFixed(2);
-    {document.getElementById('salarioLiquido').innerHTML =  "R$ "+this.salarioLiquido;}
-    {document.getElementById('inss').innerHTML =  "R$ "+this.inss;}
-    {document.getElementById('percInss').innerHTML =  this.percInss;}
-    {document.getElementById('totalDesconto').innerHTML =  "R$ "+this.totalDesconto;}
-    if(this.ir == 0){
-      {document.getElementById('impostoDeRenda').innerHTML =  "Isento";}
-      {document.getElementById('percIr').innerHTML =  "";}
-    }else{
-      {document.getElementById('impostoDeRenda').innerHTML =  "R$ "+this.ir;}
-      {document.getElementById('percIr').innerHTML =  this.percIr;}
+    if(this.salarioBruto != null){
+      this.tirarR$(this.salarioBruto, "salarioBruto");
+      this.pensaoAlimenticia != "" ? this.tirarR$(this.pensaoAlimenticia, "pensaoAlimenticia") : "" ;
+      this.planoSaude != ""  ? this.tirarR$(this.planoSaude, "planoSaude") : "" ;
+      this.outrosDescontos != "" ? this.tirarR$(this.outrosDescontos, "outrosDescontos") : "" ;
+
+      descontoTransporte = null;
+      
+      if(valor == "6"){
+        descontoTransporte = this.salarioBrutoVar * 0.06;
+      }
+      this.validaInss(this.salarioBrutoVar);
+      this.validaIR(this.salarioBrutoVar);
+      this.salarioLiquido = this.salarioBrutoVar - (this.inss + this.ir);
+      this.ir = this.ir.toFixed(2);
+      this.inss = this.inss.toFixed(2);
+      this.salarioLiquido = this.salarioLiquido - (this.outrosDescontosVar != null || this.outrosDescontos !="" ? this.outrosDescontosVar : 0);
+      this.salarioLiquido = this.salarioLiquido - (descontoTransporte != null || String(descontoTransporte) != "" ? descontoTransporte : 0);
+      this.salarioLiquido = this.salarioLiquido - (this.planoSaudeVar != null || this.planoSaudeVar != "" ? this.planoSaudeVar : 0);
+      this.salarioLiquido = this.salarioLiquido - (this.pensaoAlimenticiaVar != null || this.pensaoAlimenticiaVar != "" ? this.pensaoAlimenticiaVar : 0);
+      this.salarioLiquido = this.salarioLiquido.toFixed(2);
+      this.totalDesconto = this.salarioBrutoVar - this.salarioLiquido;
+      this.totalDesconto = this.totalDesconto.toFixed(2);
+      this.mostrarCalculadora("result", this.salarioLiquido, this.inss, this.percInss, this.totalDesconto, this.ir, this.percIr);
     }
   }
 
   limpar(){
-    window.location.reload();
+    this.salarioBruto = "";
+    this.pensaoAlimenticia = "";
+    this.planoSaude = "";
+    this.outrosDescontos = "";
   }
 
   showBannerAd() {
