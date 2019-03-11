@@ -11,11 +11,12 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
 import { BrMaskerModule } from 'br-mask';
+import { CalculadoraPageModule } from './calculadora/calculadora.module';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, CalculadoraPageModule],
   providers: [
     StatusBar,
     SplashScreen,

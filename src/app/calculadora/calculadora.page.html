@@ -1,0 +1,60 @@
+
+<div id="divCalculadora">
+  <ion-item>
+    <ion-label>R$</ion-label>
+    <ion-input id="value" [(ngModel)]="value" placeholder="0.00" type="text" readonly></ion-input>
+    <ion-button fill="clear" color="dark" id="btnDelete" (click)="delete()">
+      <ion-icon  id="iconDelete" name="backspace"></ion-icon>
+    </ion-button>
+  </ion-item>
+  <ion-button class="sizeBtn" (click)="showBtn('7')" fill="clear" color="dark">7</ion-button>
+  <ion-button class="sizeBtn" (click)="showBtn('8')" fill="clear" color="dark">8</ion-button>
+  <ion-button class="sizeBtn" (click)="showBtn('9')" fill="clear" color="dark">9</ion-button>
+  <ion-button class="sizeBtn" (click)="showBtn('4')" fill="clear" color="dark">4</ion-button>
+  <ion-button class="sizeBtn" (click)="showBtn('5')" fill="clear" color="dark">5</ion-button>
+  <ion-button class="sizeBtn" (click)="showBtn('6')" fill="clear" color="dark">6</ion-button>
+  <ion-button class="sizeBtn" (click)="showBtn('1')" fill="clear" color="dark">1</ion-button>
+  <ion-button class="sizeBtn" (click)="showBtn('2')" fill="clear" color="dark">2</ion-button>
+  <ion-button class="sizeBtn" (click)="showBtn('3')" fill="clear" color="dark">3</ion-button>
+  <ion-button class="sizeBtn" (click)="showBtn('.')" fill="clear" color="dark">.</ion-button>
+  <ion-button class="sizeBtn" (click)="showBtn('0')" fill="clear" color="dark">0</ion-button>
+
+  <ion-footer class="footerCalculadora">
+    <ion-button class="btnCancel" fill="clear" (click)="closePopover()" color="danger"><ion-icon name="close"></ion-icon></ion-button>
+    <ion-button class="btnCompleted" fill="clear" (click)="btnCompleted()" color="success"><ion-icon name="checkmark"></ion-icon></ion-button>
+  </ion-footer>
+</div>  
+
+<div id="divResult">  
+  <ion-item color="medium">
+    <ion-label stacked>Salário Líquido</ion-label>
+    <ion-button class="btnCancel" fill="clear" color="dark" (click)="closePopover()"><ion-icon name="close"></ion-icon></ion-button>
+  </ion-item>
+  <ion-item>
+    <ion-label color="success" id="salarioLiquido"></ion-label>
+  </ion-item>
+  <ion-item color="medium" >
+      <ion-label stacked>Impostos</ion-label>
+    </ion-item>
+  <ion-item>
+    <ion-label stacked>INSS</ion-label>
+    <ion-label id="percInss"></ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label color="danger" id="inss"></ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>I.R</ion-label>
+    <ion-label id="percIr"></ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label color="danger" id="impostoDeRenda"></ion-label>
+  </ion-item>
+
+  <ion-item color="medium">
+    <ion-label stacked>Total de Descontos</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label color="danger" id="totalDesconto"></ion-label>
+  </ion-item>
+</div>
