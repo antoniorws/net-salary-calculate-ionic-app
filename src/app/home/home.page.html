@@ -2,6 +2,9 @@
   <ion-toolbar id="toolbar">
     <ion-title>
       Salário Líquido
+      <ion-button id="btnWhatsapp" fill="clear"(click)="shareWhatsapp()" color="success">
+        <ion-icon name="share"></ion-icon>
+      </ion-button>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,7 +12,7 @@
 <ion-content padding class="cardValores" id="cardValores">
 
   <ion-item (click)="mostrarCalculadora('salarioBruto')">
-    <ion-input id="salarioBruto" [(ngModel)]="salarioBruto" type="text" placeHolder="Digite o Salário Bruto" readonly></ion-input>
+    <ion-input  id="salarioBruto" [(ngModel)]="salarioBruto" type="text" placeHolder="Digite o Salário Bruto" readonly></ion-input>
   </ion-item>
   
   <ion-item (click)="mostrarCalculadora('pensaoAlimenticia')">
@@ -21,17 +24,25 @@
   </ion-item>
 
   <ion-item (click)="mostrarCalculadora('outrosDescontos')">
-      <ion-input autocomplete="on"  id="outrosDescontos" [(ngModel)]="outrosDescontos" type="text" placeHolder="Outros Descontos" readonly></ion-input>
+      <ion-input id="outrosDescontos" [(ngModel)]="outrosDescontos" type="text" placeHolder="Outros Descontos" readonly></ion-input>
   </ion-item>
-  
-  <ion-list>
-    <ion-list-header>
-        Desconto Vale Transporte
-    </ion-list-header>
+  <ion-item>
+    <ion-label>Desconto Vale transporte</ion-label>
+    <ion-toggle [(ngModel)]="flagValeTransporte" (ionChange)="clickFlagValeTransporte()" value="marcado" color="success" checked="false"></ion-toggle>
+  </ion-item>
+  <ion-list id="listValeTransporte">
     <ion-radio-group [(ngModel)]="valor">
       <ion-item>
-        <ion-label>Sem Desconto</ion-label>
-        <ion-radio color="success" value="semDesconto"></ion-radio>
+        <ion-label>3%</ion-label>
+        <ion-radio color="danger" value="3"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>4%</ion-label>
+        <ion-radio color="danger" value="4"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>5%</ion-label>
+        <ion-radio color="danger" value="5"></ion-radio>
       </ion-item>
       <ion-item>
         <ion-label>6%</ion-label>
@@ -39,6 +50,25 @@
       </ion-item>
     </ion-radio-group>
   </ion-list>
+
+  <ion-item>
+    <ion-label>Calcular com Hora Extra</ion-label>
+    <ion-toggle [(ngModel)]="flagHoraExtra" (ionChange)="clickFlagHoraExtra()" value="marcado" color="success" checked="false"></ion-toggle>
+  </ion-item>
+
+  <div id="divHoraExtra">
+    <ion-item (click)="mostrarCalculadora('jornadaMensal')">
+      <ion-input color="success" id="jornadaMensal" [(ngModel)]="jornadaMensal" type="text" placeHolder="Jornada Mensal (Horas)" readonly></ion-input>
+    </ion-item>
+
+    <ion-item (click)="mostrarCalculadora('adicionalHoraExtra')">
+      <ion-input color="success" id="adicionalHoraExtra" [(ngModel)]="adicionalHoraExtra" type="text" placeHolder="Adicional de Hora Extra" readonly></ion-input>
+    </ion-item>
+
+    <ion-item (click)="mostrarCalculadora('numeroHoraExtra')">
+      <ion-input color="success" id="numeroHoraExtra" [(ngModel)]="numeroHoraExtra" type="text" placeHolder="Número de Horas Extras" readonly></ion-input>
+    </ion-item>
+  </div>
 
   <ion-button color="success" class="btnCalcular" (click)="calcular(valor)" expand="block">Calcular</ion-button>
 
