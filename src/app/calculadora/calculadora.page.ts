@@ -52,7 +52,8 @@ export class CalculadoraPage implements OnInit {
       }
     }else{
       this.showCalculadora();
-      if(this.typeInput == "salarioBruto"){
+      if(this.typeInput == "salarioBruto" || this.typeInput == "jornadaMensal" || this.typeInput == "adicionalHoraExtra"
+            || this.typeInput == "numeroHoraExtra"){
         document.getElementById('value').style.color = "#095528";
       }
     }

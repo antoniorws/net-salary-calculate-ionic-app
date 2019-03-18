@@ -8,11 +8,9 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
 import { AdMobFree } from '@ionic-native/admob-free/ngx';
 import { BrMaskerModule } from 'br-mask';
 import { CalculadoraPageModule } from './calculadora/calculadora.module';
-import {File} from '@ionic-native/file/ngx'
 import {SocialSharing} from '@ionic-native/social-sharing/ngx'
 
 @NgModule({
@@ -25,7 +23,6 @@ import {SocialSharing} from '@ionic-native/social-sharing/ngx'
     AdMobFree,
     BrMaskerModule,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    File,
     SocialSharing
   ],
   bootstrap: [AppComponent]

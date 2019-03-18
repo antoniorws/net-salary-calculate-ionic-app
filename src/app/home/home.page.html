@@ -2,6 +2,9 @@
   <ion-toolbar id="toolbar">
     <ion-title>
       Salário Líquido
+      <ion-button id="btnWhatsapp" fill="clear"(click)="shareWhatsapp()" color="success">
+        <ion-icon name="share"></ion-icon>
+      </ion-button>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -23,15 +26,23 @@
   <ion-item (click)="mostrarCalculadora('outrosDescontos')">
       <ion-input id="outrosDescontos" [(ngModel)]="outrosDescontos" type="text" placeHolder="Outros Descontos" readonly></ion-input>
   </ion-item>
-  
-  <ion-list>
-    <ion-list-header>
-        Desconto Vale Transporte
-    </ion-list-header>
+  <ion-item>
+    <ion-label>Desconto Vale transporte</ion-label>
+    <ion-toggle [(ngModel)]="flagValeTransporte" (ionChange)="clickFlagValeTransporte()" value="marcado" color="success" checked="false"></ion-toggle>
+  </ion-item>
+  <ion-list id="listValeTransporte">
     <ion-radio-group [(ngModel)]="valor">
       <ion-item>
-        <ion-label>Sem Desconto</ion-label>
-        <ion-radio color="success" value="semDesconto"></ion-radio>
+        <ion-label>3%</ion-label>
+        <ion-radio color="danger" value="3"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>4%</ion-label>
+        <ion-radio color="danger" value="4"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>5%</ion-label>
+        <ion-radio color="danger" value="5"></ion-radio>
       </ion-item>
       <ion-item>
         <ion-label>6%</ion-label>
@@ -39,9 +50,10 @@
       </ion-item>
     </ion-radio-group>
   </ion-list>
+
   <ion-item>
-    <ion-label>Marque se deseja calcular hora extra</ion-label>
-    <ion-checkbox [(ngModel)]="flagHoraExtra" (ionChange)="clickFlagHoraExtra()" value="marcado" color="success" checked="false"></ion-checkbox>
+    <ion-label>Calcular com Hora Extra</ion-label>
+    <ion-toggle [(ngModel)]="flagHoraExtra" (ionChange)="clickFlagHoraExtra()" value="marcado" color="success" checked="false"></ion-toggle>
   </ion-item>
 
   <div id="divHoraExtra">
@@ -61,17 +73,5 @@
   <ion-button color="success" class="btnCalcular" (click)="calcular(valor)" expand="block">Calcular</ion-button>
 
   <ion-button fill="outline" color="success" (click)="limpar()" expand="block">Limpar</ion-button>
-
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="light">
-      <ion-icon name="share"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="start">
-      <ion-fab-button (click)="shareWhatsapp()"><ion-icon color="success" name="logo-whatsapp"></ion-icon></ion-fab-button>
-    </ion-fab-list>
-    <ion-fab-list side="top">
-      <ion-fab-button (click)="shareFacebook()"><ion-icon color="primary" name="logo-facebook"></ion-icon></ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
 
 </ion-content>

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { AdMobFree, AdMobFreeBannerConfig, AdMobFreeInterstitialConfig} from '@ionic-native/admob-free/ngx';
-import { NavController, PopoverController, Platform, ToastController} from '@ionic/angular';
+import { NavController, PopoverController, Platform} from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { CalculadoraPage } from '../calculadora/calculadora.page';
-import {File} from '@ionic-native/file/ngx'
-import {SocialSharing} from '@ionic-native/social-sharing/ngx'
+import {SocialSharing} from '@ionic-native/social-sharing/ngx';
+import {Toast} from '@ionic-native/toast/ngx'
 
 @Component({
   selector: 'app-home',
@@ -36,21 +36,19 @@ export class HomePage {
   ultimoValor:string = null;
   flagHoraExtra = null;
   jornadaMensal = "";
-  jornadaMensalVar =null;
   adicionalHoraExtra = "";
-  adicionalHoraExtraVar = null;
   numeroHoraExtra = "";
-  numeroHoraExtraVar = null;
   valorHoraExtra:number = null;
+  flagValeTransporte = null;
 
 
   constructor(public navCtrl : NavController, public admobFree: AdMobFree, private statusBar : StatusBar,
-            private popover: PopoverController, private platform : Platform, private toastController : ToastController,
-            private file : File, private socialSharing : SocialSharing) {
+            private popover: PopoverController, private platform : Platform,
+            private socialSharing : SocialSharing, private toast : Toast) {
     this.showInterstitialAd();
     this.showBannerAd();
     this.statusBar.overlaysWebView(true);
-    this.statusBar.backgroundColorByHexString('#363636');
+    this.statusBar.backgroundColorByHexString('#dad6d6');
 
   }
 
@@ -107,6 +105,16 @@ export class HomePage {
     }else{
       document.getElementById('divHoraExtra').style.position = "absolute";
       document.getElementById('divHoraExtra').style.visibility = "hidden";
+    }
+  }
+
+  clickFlagValeTransporte(){
+    if(this.flagValeTransporte){
+      document.getElementById('listValeTransporte').style.position = "relative";
+      document.getElementById('listValeTransporte').style.visibility = "visible";
+    }else{
+      document.getElementById('listValeTransporte').style.position = "absolute";
+      document.getElementById('listValeTransporte').style.visibility = "hidden";
     }
   }
 
@@ -201,11 +209,9 @@ export class HomePage {
   }
 
   async presentToast(tipoToast:String) {
-    const toast = await this.toastController.create({
-      message: tipoToast == "horaExtra" ? 'Não foi possível calcular a hora extra!' : 'Preencha o salário Bruto!',
-      duration: 2000
-    });
-    toast.present();
+    this.toast.show(tipoToast == "horaExtra" ? `Não foi possível calcular a hora extra!` : `Preencha o salário Bruto!`,
+         '2000', 'center').subscribe(toast => {});
+
   }
 
   calculaHoraExtra(quantidade:number, jornada:number, adicional:number, salario:number){
@@ -225,12 +231,20 @@ export class HomePage {
       this.pensaoAlimenticia != "" ? this.tirarR$(this.pensaoAlimenticia, "pensaoAlimenticia") : "" ;
       this.planoSaude != ""  ? this.tirarR$(this.planoSaude, "planoSaude") : "" ;
       this.outrosDescontos != "" ? this.tirarR$(this.outrosDescontos, "outrosDescontos") : "" ;
-
       descontoTransporte = null;
-      
-      if(valor == "6"){
-        descontoTransporte = this.salarioBrutoVar * 0.06;
+
+      if(this.flagValeTransporte){
+        if(valor == "3"){
+          descontoTransporte = this.salarioBrutoVar * 0.03;
+        }else if(valor == "4"){
+          descontoTransporte = this.salarioBrutoVar * 0.04;
+        }else if(valor == "5"){
+          descontoTransporte = this.salarioBrutoVar * 0.05;
+        }else if(valor == "6"){
+          descontoTransporte = this.salarioBrutoVar * 0.06;
+        }
       }
+
       this.validaInss(this.salarioBrutoVar);
       this.validaIR(this.salarioBrutoVar);
       this.salarioLiquido = this.salarioBrutoVar - (this.inss + this.ir);
@@ -259,11 +273,8 @@ export class HomePage {
     this.outrosDescontos = "";
     this.outrosDescontosVar = null;
     this.numeroHoraExtra = "";
-    this.numeroHoraExtraVar = null;
     this.jornadaMensal = "";
-    this.jornadaMensalVar = null;
     this.adicionalHoraExtra = "";
-    this.adicionalHoraExtraVar = null;
   }
 
   showBannerAd() {
@@ -291,19 +302,7 @@ export class HomePage {
   shareWhatsapp(){
     this.socialSharing.shareViaWhatsApp("App para Cálculo de Salário Líquido",
       null, "https://play.google.com/store/apps/details?id=io.SalarioLiquidoSerrasWanderley").then(()=>{
-
     }).catch(e => {
-
     })
   }
-
-  shareFacebook(){
-    this.socialSharing.shareViaFacebook("App para Cáculo de Salário Líquido", 
-      null, "https://play.google.com/store/apps/details?id=io.SalarioLiquidoSerrasWanderley" ).then(() =>{
-
-    }).catch(e =>{
-
-    })
-  }
-
 }
