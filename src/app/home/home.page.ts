@@ -280,7 +280,7 @@ export class HomePage {
   showBannerAd() {
     let bannerConfig: AdMobFreeBannerConfig = {
         autoShow: true,
-        id : "ca-app-pub-4194830459217632/2995904010"
+        id : "ca-app-pub-6911429278500732/4018755697"
     };
     this.admobFree.banner.config(bannerConfig);
     this.admobFree.banner.prepare()
@@ -291,7 +291,7 @@ export class HomePage {
   showInterstitialAd() {
     let InterstitialConfig: AdMobFreeInterstitialConfig = {
         autoShow: true,
-        id : "ca-app-pub-4194830459217632/5650089146"
+        id : "ca-app-pub-6911429278500732/9666668199"
     };
     this.admobFree.interstitial.config(InterstitialConfig);
     this.admobFree.interstitial.prepare()
