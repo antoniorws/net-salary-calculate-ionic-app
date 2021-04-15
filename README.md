@@ -11,7 +11,7 @@ About This Project
 A simple app to calculate a CLT net salary in Brazil.<br/>
 Just enter your salary and this app will show you the taxes and your net salary.<br/>
 <br/>
-##Why
+Why
 <br/>
 I would want to find an app in play store to calculate my net 
 <br/>
