@@ -15,12 +15,6 @@ Just enter your salary and this app will show you the taxes and your net salary.
 I would want to find an app in play store to calculate my net salary 
 <br/>
 
-## Instalers
-This app is free and available only Play Store:
-<br/>
-https://play.google.com/store/apps/details?id=io.SalarioLiquidoSerrasWanderley
-<br/>
-
 ## Run Locally
 
 ### Prerequisites
