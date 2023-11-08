@@ -25,4 +25,4 @@ Clone this project and run it with ionic.
 Read the ionic documentation for more information.
 <br/>
 ## Built With
-Ionic - https://ionicframework.com/
+[Ionic](https://ionicframework.com/)
